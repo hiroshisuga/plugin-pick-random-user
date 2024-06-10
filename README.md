@@ -11,7 +11,7 @@ The Pick Random User Plugin shows a modal for moderator to pick a user (mainly v
 1. Start the development server:
 
 ```bash
-cd $HOME/src/plugins/pick-random-user-plugin
+cd $HOME/src/plugin-pick-random-user-plugin
 npm install
 npm start
 ```
@@ -36,7 +36,7 @@ npm start
 To build the plugin for production use, follow these steps:
 
 ```bash
-cd $HOME/src/plugins/pick-random-user-plugin
+cd $HOME/src/plugin-pick-random-user-plugin
 npm ci
 npm run build-bundle
 ```
