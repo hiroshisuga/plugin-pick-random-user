@@ -1,17 +1,65 @@
-# Repository of a plugin for BigBlueButton
+# Pick random user
 
-## Description
+## What is it?
 
-A brief description of the plugin including a screenshot or a short video.
+The Pick Random User Plugin shows a modal for moderator to pick a user (mainly viewer but it could also be a moderator) randomly out of the whole list of users present in a meetings. 
 
-## Running the Plugin From Source Code
+![Gif of plugin demo](./public/assets/plugin.gif)
+
+## Running the Plugin from Source
+
+1. Start the development server:
+
+```bash
+cd $HOME/src/plugins/pick-random-user-plugin
+npm install
+npm start
+```
+
+2. Add reference to it on BigBlueButton's `settings.yml`:
+
+```yaml
+  plugins:
+    - name: PickRandomUserPlugin
+      url: http://127.0.0.1:4701/static/PickRandomUserPlugin.js
+      dataChannels:
+        - name: pickRandomUser
+          writePermission: ['presenter']
+          deletePermission: ['moderator', 'sender']
+        - name: modalInformationFromPresenter
+          writePermission: ['presenter']
+          deletePermission: ['moderator', 'sender']
+```
 
 ## Building the Plugin
 
+To build the plugin for production use, follow these steps:
 
-## Background
+```bash
+cd $HOME/src/plugins/pick-random-user-plugin
+npm ci
+npm run build-bundle
+```
 
-BigBlueButton added supports for plugins in 2024 with BBB 3.0.
-Check the official [documentation website](https://docs.bigbluebutton.org) for more information.
+The above command will generate the `dist` folder, containing the bundled JavaScript file named `PickRandomUserPlugin.js`. This file can be hosted on any HTTPS server.
 
-This plugin repository was created using the plugin [template repository for BigBlueButton](https://github.com/bigbluebutton/plugin-template) hosted on GitHub.
+To use the plugin with BigBlueButton, add the plugin's URL to `settings.yml` as shown below:
+
+```yaml
+public:
+  app:
+    ... // All app configurations
+  plugins:
+    - name: PickRandomUserPlugin
+      url: <<PLUGIN_URL>>
+        dataChannels:
+        - name: pickRandomUser
+          writePermission: ['presenter']
+          deletePermission: ['moderator', 'sender']
+        - name: modalInformationFromPresenter
+          writePermission: ['presenter']
+          deletePermission: ['moderator', 'sender']
+  ... // All other configurations
+```
+
+Alternatively, you can host the bundled file on the BigBlueButton server by copying `dist/PickRandomUserPlugin.js` to the folder `/var/www/bigbluebutton-default/assets/plugins`. In this case, the `<<PLUGIN_URL>>` will be `https://<your-host>/plugins/PickRandomUserPlugin.js`.
