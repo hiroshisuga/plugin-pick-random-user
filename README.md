@@ -24,11 +24,11 @@ npm start
       url: http://127.0.0.1:4701/static/PickRandomUserPlugin.js
       dataChannels:
         - name: pickRandomUser
-          writePermission: ['presenter']
-          deletePermission: ['moderator', 'sender']
+          pushPermission: ['presenter']
+          replaceOrdeletePermission: ['moderator', 'creator']
         - name: modalInformationFromPresenter
           writePermission: ['presenter']
-          deletePermission: ['moderator', 'sender']
+          replaceOrdeletePermission: ['moderator', 'creator']
 ```
 
 ## Building the Plugin
