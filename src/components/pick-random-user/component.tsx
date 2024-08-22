@@ -26,8 +26,15 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
     .useCustomSubscription<UsersMoreInformationGraphqlResponse>(USERS_MORE_INFORMATION);
   const { data: allUsers } = allUsersInfo;
 
-  const [pickedUserFromDataChannelResponse, dispatcherPickedUser, deletionFunction] = pluginApi.useDataChannel<PickedUser>('pickRandomUser');
-  const [modalInformationFromPresenter, dispatchModalInformationFromPresenter] = pluginApi.useDataChannel<ModalInformationFromPresenter>('modalInformationFromPresenter');
+  const {
+    data: pickedUserFromDataChannelResponse,
+    pushEntry: pushPickedUser,
+    deleteEntry: deletePickedUser,
+  } = pluginApi.useDataChannel<PickedUser>('pickRandomUser');
+  const {
+    data: modalInformationFromPresenter,
+    pushEntry: dispatchModalInformationFromPresenter,
+  } = pluginApi.useDataChannel<ModalInformationFromPresenter>('modalInformationFromPresenter');
 
   const pickedUserFromDataChannel = {
     data: pickedUserFromDataChannelResponse?.data,
@@ -66,7 +73,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
     if (usersToBePicked && usersToBePicked.user.length > 0 && currentUser?.presenter) {
       const randomIndex = Math.floor(Math.random() * usersToBePicked.user.length);
       const randomlyPickedUser = usersToBePicked.user[randomIndex];
-      dispatcherPickedUser(randomlyPickedUser);
+      pushPickedUser(randomlyPickedUser);
     }
     setShowModal(true);
   };
@@ -77,7 +84,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
         skipModerators: userFilterViewer,
         skipPresenter: filterOutPresenter,
       });
-      dispatcherPickedUser(null);
+      pushPickedUser(null);
     }
     setShowModal(false);
   };
@@ -120,8 +127,8 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
           userFilterViewer,
           setUserFilterViewer,
           dataChannelPickedUsers: pickedUserFromDataChannel.data,
-          dispatcherPickedUser,
-          deletionFunction,
+          dispatcherPickedUser: pushPickedUser,
+          deletionFunction: deletePickedUser,
         }}
       />
       <ActionButtonDropdownManager
