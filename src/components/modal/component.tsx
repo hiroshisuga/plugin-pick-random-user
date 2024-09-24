@@ -29,12 +29,9 @@ export function PickUserModal(props: PickUserModalProps) {
   } else {
     userRole = (users?.length !== 1) ? 'users' : 'user';
   }
-  let title = (users?.length === 1)
-    ? `There is only one ${userRole}`
+  const title = (pickedUser?.userId === currentUser?.userId)
+    ? 'You have been randomly picked'
     : 'Randomly picked user';
-  if (pickedUser?.userId === currentUser?.userId) {
-    title = 'You have been randomly picked';
-  }
 
   const [showPresenterView, setShowPresenterView] = useState<boolean>(
     currentUser?.presenter && !pickedUser,
