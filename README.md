@@ -16,19 +16,10 @@ npm install
 npm start
 ```
 
-2. Add reference to it on BigBlueButton's `settings.yml`:
+2. Add this create parameter:
 
-```yaml
-  plugins:
-    - name: PickRandomUserPlugin
-      url: http://127.0.0.1:4701/static/PickRandomUserPlugin.js
-      dataChannels:
-        - name: pickRandomUser
-          pushPermission: ['presenter']
-          replaceOrdeletePermission: ['moderator', 'creator']
-        - name: modalInformationFromPresenter
-          writePermission: ['presenter']
-          replaceOrdeletePermission: ['moderator', 'creator']
+```
+pluginsManifests=[{"url": "http://172.17.0.1:4701/manifest.json"}]
 ```
 
 ## Building the Plugin
@@ -41,25 +32,12 @@ npm ci
 npm run build-bundle
 ```
 
-The above command will generate the `dist` folder, containing the bundled JavaScript file named `PickRandomUserPlugin.js`. This file can be hosted on any HTTPS server.
+The above command will generate the `dist` folder, containing the bundled JavaScript file named `PickRandomUserPlugin.js`. This file can be hosted on any HTTPS server along with its `manifest.json`.
 
-To use the plugin with BigBlueButton, add the plugin's URL to `settings.yml` as shown below:
+Remember to change the `javascriptEntrypointUrl` in the `manifest.json` that you will host.
 
-```yaml
-public:
-  app:
-    ... // All app configurations
-  plugins:
-    - name: PickRandomUserPlugin
-      url: <<PLUGIN_URL>>
-        dataChannels:
-        - name: pickRandomUser
-          writePermission: ['presenter']
-          deletePermission: ['moderator', 'sender']
-        - name: modalInformationFromPresenter
-          writePermission: ['presenter']
-          deletePermission: ['moderator', 'sender']
-  ... // All other configurations
+To use the plugin in BigBlueButton, send this parameter along in create call:
+
 ```
-
-Alternatively, you can host the bundled file on the BigBlueButton server by copying `dist/PickRandomUserPlugin.js` to the folder `/var/www/bigbluebutton-default/assets/plugins`. In this case, the `<<PLUGIN_URL>>` will be `https://<your-host>/plugins/PickRandomUserPlugin.js`.
+pluginsManifests=[{"url": "<manifest.json url>"}]
+```
