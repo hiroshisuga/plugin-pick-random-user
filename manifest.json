@@ -1,7 +1,7 @@
 {
   "requiredSdkVersion": "~0.0.65",
   "name": "PickRandomUserPlugin",
-  "javascriptEntrypointUrl": "http://127.0.0.1:4701/static/PickRandomUserPlugin.js",
+  "javascriptEntrypointUrl": "PickRandomUserPlugin.js",
   "dataChannels": [
       {
           "name": "modalInformationFromPresenter",

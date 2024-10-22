@@ -8,7 +8,7 @@ module.exports = {
     filename: 'PickRandomUserPlugin.js',
     library: 'PickRandomUserPlugin',
     libraryTarget: 'umd',
-    publicPath: '/static/',
+    publicPath: '/',
     globalObject: 'this',
   },
   devServer: {
