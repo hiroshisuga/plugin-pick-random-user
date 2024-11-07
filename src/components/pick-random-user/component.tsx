@@ -6,6 +6,7 @@ import {
   ModalInformationFromPresenter,
   PickRandomUserPluginProps,
   PickedUser,
+  PickedUserWithEntryId,
   UsersMoreInformationGraphqlResponse,
 } from './types';
 import { USERS_MORE_INFORMATION } from './queries';
@@ -16,7 +17,9 @@ import ActionButtonDropdownManager from '../extensible-areas/action-button-dropd
 function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   BbbPluginSdk.initialize(uuid);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [pickedUser, setPickedUser] = useState<PickedUser | undefined>();
+  const [
+    pickedUserWithEntryId,
+    setPickedUserWithEntryId] = useState<PickedUserWithEntryId | undefined>();
   const [userFilterViewer, setUserFilterViewer] = useState<boolean>(true);
   const [filterOutPresenter, setFilterOutPresenter] = useState<boolean>(true);
   const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
@@ -29,6 +32,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   const {
     data: pickedUserFromDataChannelResponse,
     pushEntry: pushPickedUser,
+    replaceEntry: updatePickedRandomUser,
     deleteEntry: deletePickedUser,
   } = pluginApi.useDataChannel<PickedUser>('pickRandomUser');
   const {
@@ -94,18 +98,25 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
       && pickedUserFromDataChannel.data?.length > 0) {
       const pickedUserToUpdate = pickedUserFromDataChannel
         .data[0];
-      setPickedUser(pickedUserToUpdate?.payloadJson);
-      if (pickedUserToUpdate?.payloadJson) setShowModal(true);
+      if (pickedUserToUpdate?.entryId !== pickedUserWithEntryId?.entryId) {
+        setPickedUserWithEntryId({
+          pickedUser: pickedUserToUpdate?.payloadJson,
+          entryId: pickedUserToUpdate.entryId,
+        });
+      }
+      if (pickedUserToUpdate?.payloadJson && pickedUserToUpdate?.payloadJson.isPresenterViewing) {
+        setShowModal(true);
+      }
     } else if (pickedUserFromDataChannel.data
         && pickedUserFromDataChannel.data?.length === 0) {
-      setPickedUser(null);
+      setPickedUserWithEntryId(null);
       if (currentUser && !currentUser.presenter) setShowModal(false);
     }
   }, [pickedUserFromDataChannelResponse]);
 
   useEffect(() => {
-    if (!pickedUser && !currentUser?.presenter) setShowModal(false);
-  }, [pickedUser]);
+    if (!pickedUserWithEntryId && !currentUser?.presenter) setShowModal(false);
+  }, [pickedUserWithEntryId]);
 
   useEffect(() => {
     if (!currentUser?.presenter && dispatchModalInformationFromPresenter) handleCloseModal();
@@ -117,7 +128,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
           showModal,
           handleCloseModal,
           users: usersToBePicked?.user,
-          pickedUser,
+          pickedUserWithEntryId,
           handlePickRandomUser,
           currentUser,
           filterOutPresenter,
@@ -125,13 +136,14 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
           userFilterViewer,
           setUserFilterViewer,
           dataChannelPickedUsers: pickedUserFromDataChannel.data,
+          updatePickedRandomUser,
           dispatcherPickedUser: pushPickedUser,
           deletionFunction: deletePickedUser,
         }}
       />
       <ActionButtonDropdownManager
         {...{
-          pickedUser,
+          pickedUserWithEntryId,
           currentUser,
           pluginApi,
           setShowModal,
