@@ -18,6 +18,7 @@ export interface UsersMoreInformationGraphqlResponse {
 export interface ModalInformationFromPresenter {
     skipModerators: boolean;
     skipPresenter: boolean;
+    includePickedUsers: boolean;
 }
 
 export interface DataChannelArrayMessages <T> {

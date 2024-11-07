@@ -40,6 +40,8 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
     setFilterOutPresenter,
     userFilterViewer,
     setUserFilterViewer,
+    filterOutPickedUsers,
+    setFilterOutPickedUsers,
     deletionFunction,
     handlePickRandomUser,
     dataChannelPickedUsers,
@@ -82,6 +84,19 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               value="skipPresenter"
             />
             <span className="check-box-label">Skip Presenter</span>
+          </label>
+          <label className="check-box-label-container" htmlFor="includePickedUsers">
+            <input
+              type="checkbox"
+              id="includePickedUsers"
+              checked={!filterOutPickedUsers}
+              onChange={() => {
+                setFilterOutPickedUsers(!filterOutPickedUsers);
+              }}
+              name="options"
+              value="includePickedUsers"
+            />
+            <span className="check-box-label">Include already picked users</span>
           </label>
         </p>
       </div>
