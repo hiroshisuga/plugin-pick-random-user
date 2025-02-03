@@ -7,19 +7,17 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
     pickedUserWithEntryId,
     currentUser,
     updatePickedRandomUser,
-    setShowPresenterView,
-    dispatcherPickedUser,
   } = props;
 
   React.useEffect(() => {
-    if (currentUser?.presenter) {
+    if (currentUser?.presenter && pickedUserWithEntryId) {
       updatePickedRandomUser(pickedUserWithEntryId.entryId, {
         ...pickedUserWithEntryId.pickedUser,
         isPresenterViewing: true,
       });
     }
     return () => {
-      if (currentUser?.presenter) {
+      if (currentUser?.presenter && pickedUserWithEntryId) {
         updatePickedRandomUser(pickedUserWithEntryId.entryId, {
           ...pickedUserWithEntryId.pickedUser,
           isPresenterViewing: false,
@@ -28,12 +26,6 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
     };
   }, []);
 
-  const handleBackToPresenterView = () => {
-    if (currentUser?.presenter) {
-      setShowPresenterView(true);
-      dispatcherPickedUser(null);
-    }
-  };
   return (
     <div
       style={{
@@ -52,11 +44,6 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
             </div>
             <p className="user-name">{pickedUserWithEntryId.pickedUser?.name}</p>
           </>
-        ) : null
-      }
-      {
-        (currentUser?.presenter) ? (
-          <button type="button" onClick={handleBackToPresenterView}>back</button>
         ) : null
       }
     </div>

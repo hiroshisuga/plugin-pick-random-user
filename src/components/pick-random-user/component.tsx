@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import * as ReactDOM from 'react-dom/client';
 
-import { BbbPluginSdk, PluginApi } from 'bigbluebutton-html-plugin-sdk';
+import { BbbPluginSdk, GenericContentSidekickArea, PluginApi } from 'bigbluebutton-html-plugin-sdk';
 import {
-  ModalInformationFromPresenter,
   PickRandomUserPluginProps,
   PickedUser,
   PickedUserWithEntryId,
-  UsersMoreInformationGraphqlResponse,
 } from './types';
-import { USERS_MORE_INFORMATION } from './queries';
 import { PickUserModal } from '../modal/component';
 import { Role } from './enums';
-import ActionButtonDropdownManager from '../extensible-areas/action-button-dropdown/component';
+import { PickRandomUserPanelComponent } from '../pick-random-user-panel/component';
+
+const NAVIGATION_SIDEBAR_BUTTON_ICON = 'random';
 
 function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   BbbPluginSdk.initialize(uuid);
@@ -20,81 +20,20 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   const [
     pickedUserWithEntryId,
     setPickedUserWithEntryId] = useState<PickedUserWithEntryId | undefined>();
-  const [userFilterViewer, setUserFilterViewer] = useState<boolean>(true);
-  const [filterOutPresenter, setFilterOutPresenter] = useState<boolean>(true);
-  const [filterOutPickedUsers, setFilterOutPickedUsers] = useState<boolean>(true);
   const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
   const currentUserInfo = pluginApi.useCurrentUser();
   const { data: currentUser } = currentUserInfo;
-  const allUsersInfo = pluginApi
-    .useCustomSubscription<UsersMoreInformationGraphqlResponse>(USERS_MORE_INFORMATION);
-  const { data: allUsers } = allUsersInfo;
 
   const {
     data: pickedUserFromDataChannelResponse,
-    pushEntry: pushPickedUser,
     replaceEntry: updatePickedRandomUser,
-    deleteEntry: deletePickedUser,
   } = pluginApi.useDataChannel<PickedUser>('pickRandomUser');
-  const {
-    data: modalInformationFromPresenter,
-    pushEntry: dispatchModalInformationFromPresenter,
-  } = pluginApi.useDataChannel<ModalInformationFromPresenter>('modalInformationFromPresenter');
 
   const pickedUserFromDataChannel = {
     data: pickedUserFromDataChannelResponse?.data,
     loading: false,
   };
-
-  useEffect(() => {
-    const modalInformationList = modalInformationFromPresenter
-      .data;
-    const modalInformation = modalInformationList
-      ? modalInformationList[modalInformationList.length - 1]?.payloadJson : null;
-    if (modalInformation) {
-      setFilterOutPresenter(modalInformation.skipPresenter);
-      setUserFilterViewer(modalInformation.skipModerators);
-      setFilterOutPickedUsers(!modalInformation.includePickedUsers);
-    }
-  }, [modalInformationFromPresenter]);
-
-  const usersToBePicked: UsersMoreInformationGraphqlResponse = {
-    user: allUsers?.user.filter((user) => {
-      let roleFilter = true;
-      if (userFilterViewer) roleFilter = user.role === Role.VIEWER;
-      if (filterOutPickedUsers && pickedUserFromDataChannel.data) {
-        return roleFilter && pickedUserFromDataChannel
-          .data.findIndex(
-            (u) => u?.payloadJson?.userId === user?.userId,
-          ) === -1;
-      }
-      return roleFilter;
-    }).filter((user) => {
-      if (filterOutPresenter) return !user.presenter;
-      return true;
-    }),
-  };
-
-  const handlePickRandomUser = () => {
-    if (usersToBePicked && usersToBePicked.user.length > 0 && currentUser?.presenter) {
-      const randomIndex = Math.floor(Math.random() * usersToBePicked.user.length);
-      const randomlyPickedUser = usersToBePicked.user[randomIndex];
-      pushPickedUser(randomlyPickedUser);
-    }
-    setShowModal(true);
-  };
-
-  const handleCloseModal = (): void => {
-    if (currentUser?.presenter) {
-      dispatchModalInformationFromPresenter({
-        skipModerators: userFilterViewer,
-        skipPresenter: filterOutPresenter,
-        includePickedUsers: !filterOutPickedUsers,
-      });
-      pushPickedUser(null);
-    }
-    setShowModal(false);
-  };
+  const genericContentId = useRef<string | undefined>('');
 
   useEffect(() => {
     if (pickedUserFromDataChannel.data
@@ -121,41 +60,53 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
     if (!pickedUserWithEntryId && !currentUser?.presenter) setShowModal(false);
   }, [pickedUserWithEntryId]);
 
+  const genericContentSidekickArea = {
+    contentFunction: (element: HTMLElement) => {
+      const root = ReactDOM.createRoot(element);
+      root.render(
+        <React.StrictMode>
+          <PickRandomUserPanelComponent
+            pluginApi={pluginApi}
+            currentUser={currentUser}
+            setShowModal={setShowModal}
+            pickedUserWithEntryId={pickedUserWithEntryId}
+          />
+        </React.StrictMode>,
+      );
+      return root;
+    },
+    name: 'Pick Random User',
+    section: '',
+    open: false,
+    buttonIcon: NAVIGATION_SIDEBAR_BUTTON_ICON,
+    ...(genericContentId.current && { id: genericContentId.current }),
+  };
+
   useEffect(() => {
-    if (!currentUser?.presenter && dispatchModalInformationFromPresenter) handleCloseModal();
-  }, [currentUser]);
+    if (currentUser?.role !== Role.VIEWER) {
+      const generatedIds = pluginApi.setGenericContentItems([
+        new GenericContentSidekickArea(genericContentSidekickArea),
+      ]);
+      genericContentId.current = generatedIds.pop();
+    }
+  }, [
+    genericContentSidekickArea.name,
+    genericContentSidekickArea.section,
+    genericContentSidekickArea.buttonIcon,
+    setShowModal,
+    currentUser,
+  ]);
+  if (!pickedUserWithEntryId) return null;
   return (
-    <>
-      <PickUserModal
-        {...{
-          showModal,
-          handleCloseModal,
-          users: usersToBePicked?.user,
-          pickedUserWithEntryId,
-          handlePickRandomUser,
-          currentUser,
-          filterOutPresenter,
-          setFilterOutPresenter,
-          userFilterViewer,
-          setUserFilterViewer,
-          filterOutPickedUsers,
-          setFilterOutPickedUsers,
-          dataChannelPickedUsers: pickedUserFromDataChannel.data,
-          updatePickedRandomUser,
-          dispatcherPickedUser: pushPickedUser,
-          deletionFunction: deletePickedUser,
-        }}
-      />
-      <ActionButtonDropdownManager
-        {...{
-          pickedUserWithEntryId,
-          currentUser,
-          pluginApi,
-          setShowModal,
-          currentUserInfo,
-        }}
-      />
-    </>
+    <PickUserModal
+      {...{
+        showModal,
+        handleCloseModal: () => { setShowModal(false); },
+        pickedUserWithEntryId,
+        currentUser,
+        updatePickedRandomUser,
+      }}
+    />
   );
 }
 
