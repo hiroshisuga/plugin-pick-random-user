@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import * as ReactDOM from 'react-dom/client';
 
-import { BbbPluginSdk, GenericContentSidekickArea, PluginApi } from 'bigbluebutton-html-plugin-sdk';
+import { GenericContentSidekickArea } from 'bigbluebutton-html-plugin-sdk';
 import {
   PickRandomUserPluginProps,
   PickedUser,
@@ -11,16 +11,15 @@ import {
 import { PickUserModal } from '../modal/component';
 import { Role } from './enums';
 import { PickRandomUserPanelComponent } from '../pick-random-user-panel/component';
+import { intlMessages } from '../../intlMessages';
 
 const NAVIGATION_SIDEBAR_BUTTON_ICON = 'random';
 
-function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
-  BbbPluginSdk.initialize(uuid);
+function PickRandomUserPlugin({ pluginApi, intl }: PickRandomUserPluginProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [
     pickedUserWithEntryId,
     setPickedUserWithEntryId] = useState<PickedUserWithEntryId | undefined>();
-  const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
   const currentUserInfo = pluginApi.useCurrentUser();
   const { data: currentUser } = currentUserInfo;
 
@@ -67,6 +66,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
         <React.StrictMode>
           <PickRandomUserPanelComponent
             pluginApi={pluginApi}
+            intl={intl}
             currentUser={currentUser}
             setShowModal={setShowModal}
             pickedUserWithEntryId={pickedUserWithEntryId}
@@ -75,7 +75,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
       );
       return root;
     },
-    name: 'Pick Random User',
+    name: intl.formatMessage(intlMessages.title),
     section: '',
     open: false,
     buttonIcon: NAVIGATION_SIDEBAR_BUTTON_ICON,
@@ -90,6 +90,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
       genericContentId.current = generatedIds.pop();
     }
   }, [
+    intl,
     genericContentSidekickArea.name,
     genericContentSidekickArea.section,
     genericContentSidekickArea.buttonIcon,
@@ -100,6 +101,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   return (
     <PickUserModal
       {...{
+        intl,
         showModal,
         handleCloseModal: () => { setShowModal(false); },
         pickedUserWithEntryId,

@@ -3,9 +3,11 @@ import * as ReactModal from 'react-modal';
 import { PickUserModalProps } from './types';
 import './style.css';
 import { PickedUserViewComponent } from './picked-user-view/component';
+import { intlMessages } from '../../intlMessages';
 
 export function PickUserModal(props: PickUserModalProps) {
   const {
+    intl,
     showModal,
     handleCloseModal,
     updatePickedRandomUser,
@@ -14,8 +16,8 @@ export function PickUserModal(props: PickUserModalProps) {
   } = props;
 
   const title = (pickedUserWithEntryId?.pickedUser?.userId === currentUser?.userId)
-    ? 'You have been randomly picked'
-    : 'Randomly picked user';
+    ? intl.formatMessage(intlMessages.youWerePicked)
+    : intl.formatMessage(intlMessages.pickedUser);
 
   return (
     <ReactModal
@@ -35,7 +37,7 @@ export function PickUserModal(props: PickUserModalProps) {
           onClick={() => {
             handleCloseModal();
           }}
-          aria-label="Close button"
+          aria-label={intl.formatMessage(intlMessages.closeButton)}
         >
           <i
             className="icon-bbb-close"

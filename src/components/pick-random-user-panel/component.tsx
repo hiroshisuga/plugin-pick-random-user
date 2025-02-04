@@ -7,6 +7,7 @@ import { USERS_MORE_INFORMATION } from './queries';
 import { PickedUser, UsersMoreInformationGraphqlResponse } from '../pick-random-user/types';
 import { PanelInformationFromPresenter, PickRandomUserPanelComponentProps } from './types';
 import { Role } from '../pick-random-user/enums';
+import { intlMessages } from '../../intlMessages';
 
 const MAX_NAMES_TO_SHOW = 3;
 const DATA_CHANNEL_LOADING_TOLERANCE_TIMEOUT = 3000;
@@ -43,14 +44,15 @@ const hasChanged = (targetValue: boolean, baseValue: boolean) => (targetValue !=
 export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponentProps) {
   const {
     pluginApi,
+    intl,
     pickedUserWithEntryId,
     setShowModal,
     currentUser,
   } = props;
   const allUsersInfo = pluginApi
     .useCustomSubscription<UsersMoreInformationGraphqlResponse>(USERS_MORE_INFORMATION);
-  const [skipModerators, setSkipModerators] = useState<boolean>(true);
-  const [skipPresenter, setSkipPresenter] = useState<boolean>(true);
+  const [includeModerators, setincludeModerators] = useState<boolean>(false);
+  const [includePresenter, setincludePresenter] = useState<boolean>(false);
   const [includePickedUsers, setIncludePickedUsers] = useState<boolean>(true);
   const [
     initialPanelInformationAlreadySynced,
@@ -92,18 +94,18 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
     const panelInformation = panelInformationList
       ? panelInformationList[0]?.payloadJson : null;
     const {
-      skipModerators: dChannelSkipModerators = null,
-      skipPresenter: dChannelSkipPresenter = null,
+      includeModerators: dChannelIncludeModerators = null,
+      includePresenter: dChannelIncludePresenter = null,
       includePickedUsers: dChannelIncludePickedUsers = null,
     } = panelInformation || {};
 
-    if (dChannelSkipModerators !== null
-      && hasChanged(dChannelSkipModerators, skipModerators)) {
-      setSkipModerators(dChannelSkipModerators);
+    if (dChannelIncludeModerators !== null
+      && hasChanged(dChannelIncludeModerators, includeModerators)) {
+      setincludeModerators(dChannelIncludeModerators);
     }
-    if (dChannelSkipPresenter !== null
-      && hasChanged(dChannelSkipPresenter, skipPresenter)) {
-      setSkipPresenter(dChannelSkipPresenter);
+    if (dChannelIncludePresenter !== null
+      && hasChanged(dChannelIncludePresenter, includePresenter)) {
+      setincludePresenter(dChannelIncludePresenter);
     }
     if (dChannelIncludePickedUsers !== null
       && hasChanged(dChannelIncludePickedUsers, includePickedUsers)) {
@@ -118,35 +120,35 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
     const panelInformation = panelInformationList
       ? panelInformationList[0]?.payloadJson : null;
     const {
-      skipModerators: dChannelSkipModerators = null,
-      skipPresenter: dChannelSkipPresenter = null,
+      includeModerators: dChannelIncludeModerators = null,
+      includePresenter: dChannelIncludePresenter = null,
       includePickedUsers: dChannelIncludePickedUsers = null,
     } = panelInformation || {};
 
     if (currentUser?.presenter
       && dispatchPanelInformationFromPresenter
       && initialPanelInformationAlreadySynced) {
-      if (hasChanged(dChannelSkipModerators, skipModerators)
-        || hasChanged(dChannelSkipPresenter, skipPresenter)
+      if (hasChanged(dChannelIncludeModerators, includeModerators)
+        || hasChanged(dChannelIncludePresenter, includePresenter)
         || hasChanged(dChannelIncludePickedUsers, includePickedUsers)) {
         dispatchPanelInformationFromPresenter({
-          skipModerators,
-          skipPresenter,
+          includeModerators,
+          includePresenter,
           includePickedUsers,
         });
       }
     }
   }, [
     dispatchPanelInformationFromPresenter,
-    skipModerators,
-    skipPresenter,
+    includeModerators,
+    includePresenter,
     includePickedUsers,
   ]);
 
   const usersToBePicked: PickedUser[] = allUsers?.user
     .filter((user) => {
       let roleFilter = true;
-      if (skipModerators) roleFilter = user.role === Role.VIEWER;
+      if (!includeModerators) roleFilter = user.role === Role.VIEWER;
       if (!includePickedUsers && pickedUserFromDataChannel.data) {
         return roleFilter && pickedUserFromDataChannel
           .data.findIndex(
@@ -155,7 +157,7 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
       }
       return roleFilter;
     }).filter((user) => {
-      if (skipPresenter) return !user.presenter;
+      if (!includePresenter) return !user.presenter;
       return true;
     });
 
@@ -180,18 +182,16 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
             }}
           >
             {
-            (pickedUserWithEntryId) ? 'Pick again' : `Pick ${userRole}`
+            (pickedUserWithEntryId)
+              ? intl.formatMessage(intlMessages.pickRandomUserButtonLabelAgain)
+              : intl.formatMessage(intlMessages.pickRandomUserButtonLabelRole, { 0: userRole })
             }
           </button>
         );
       }
       return (
         <p>
-          No
-          {' '}
-          {userRole}
-          {' '}
-          available to randomly pick from
+          {intl.formatMessage(intlMessages.noUsersAvailableWarning, { 0: userRole })}
         </p>
       );
     }
@@ -199,10 +199,14 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
   };
 
   let userRole: string;
-  if (skipModerators) {
-    userRole = (usersToBePicked?.length !== 1) ? 'viewers' : 'viewer';
+  if (!includeModerators) {
+    userRole = (usersToBePicked?.length !== 1)
+      ? intl.formatMessage(intlMessages.viewers)
+      : intl.formatMessage(intlMessages.viewer);
   } else {
-    userRole = (usersToBePicked?.length !== 1) ? 'users' : 'user';
+    userRole = (usersToBePicked?.length !== 1)
+      ? intl.formatMessage(intlMessages.users)
+      : intl.formatMessage(intlMessages.user);
   }
   const hasPermissionToSeePanel = currentUser?.presenter || currentUser?.role === Role.MODERATOR;
   if (!hasPermissionToSeePanel) return null;
@@ -214,35 +218,35 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
       }}
     >
       <div className="moderator-view-wrapper">
-        <p className="moderator-view-label">Options</p>
+        <p className="moderator-view-label">{intl.formatMessage(intlMessages.options)}</p>
         <p className="moderator-view-value">
-          <label className="check-box-label-container" htmlFor="skipModerators">
+          <label className="check-box-label-container" htmlFor="includeModerators">
             <input
               type="checkbox"
-              id="skipModerators"
+              id="includeModerators"
               disabled={!currentUser?.presenter}
-              checked={skipModerators}
+              checked={includeModerators}
               onChange={() => {
-                setSkipModerators((value) => !value);
+                setincludeModerators((value) => !value);
               }}
               name="options"
-              value="skipModerators"
+              value="includeModerators"
             />
-            <span className="check-box-label">Skip moderators</span>
+            <span className="check-box-label">{intl.formatMessage(intlMessages.includeModerators)}</span>
           </label>
-          <label className="check-box-label-container" htmlFor="skipPresenter">
+          <label className="check-box-label-container" htmlFor="includePresenter">
             <input
               type="checkbox"
-              id="skipPresenter"
+              id="includePresenter"
               disabled={!currentUser?.presenter}
-              checked={skipPresenter}
+              checked={includePresenter}
               onChange={() => {
-                setSkipPresenter((value) => !value);
+                setincludePresenter((value) => !value);
               }}
               name="options"
-              value="skipPresenter"
+              value="includePresenter"
             />
-            <span className="check-box-label">Skip Presenter</span>
+            <span className="check-box-label">{intl.formatMessage(intlMessages.includePresenter)}</span>
           </label>
           <label className="check-box-label-container" htmlFor="includePickedUsers">
             <input
@@ -256,12 +260,12 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
               name="options"
               value="includePickedUsers"
             />
-            <span className="check-box-label">Include already picked users</span>
+            <span className="check-box-label">{intl.formatMessage(intlMessages.includePickedUsers)}</span>
           </label>
         </p>
       </div>
       <div className="moderator-view-wrapper">
-        <p className="moderator-view-label">Available for selection</p>
+        <p className="moderator-view-label">{intl.formatMessage(intlMessages.availableForSelection)}</p>
         <p className="moderator-view-value">
           {usersToBePicked?.length}
           {' '}
@@ -273,7 +277,7 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
       </div>
       <div className="moderator-view-wrapper">
         <div className="moderator-view-wrapper-title">
-          <p className="moderator-view-label">Previously picked</p>
+          <p className="moderator-view-label">{intl.formatMessage(intlMessages.previouslyPicked)}</p>
           {currentUser?.presenter && (
             <button
               type="button"
@@ -282,7 +286,7 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
                 deletePickedUser([RESET_DATA_CHANNEL]);
               }}
             >
-              Clear All
+              {intl.formatMessage(intlMessages.clearAll)}
             </button>
           )}
         </div>

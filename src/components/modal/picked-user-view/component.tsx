@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { PickedUserViewComponentProps } from './types';
 
 export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
@@ -9,7 +10,7 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
     updatePickedRandomUser,
   } = props;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentUser?.presenter && pickedUserWithEntryId) {
       updatePickedRandomUser(pickedUserWithEntryId.entryId, {
         ...pickedUserWithEntryId.pickedUser,
