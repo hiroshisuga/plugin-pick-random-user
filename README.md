@@ -2,7 +2,7 @@
 
 ## What is it?
 
-The Pick Random User Plugin shows a modal for moderator to pick a user (mainly viewer but it could also be a moderator) randomly out of the whole list of users present in a meetings. 
+The Pick Random User Plugin is listed in the apps gallery for presenters to pick a user randomly out of the whole list of users present in a meetings. 
 
 ![Gif of plugin demo](./public/assets/plugin.gif)
 
