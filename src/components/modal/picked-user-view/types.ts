@@ -7,4 +7,5 @@ export interface PickedUserViewComponentProps {
     updatePickedRandomUser: ReplaceEntryFunction<PickedUser>;
     pickedUserWithEntryId: PickedUserWithEntryId;
     currentUser: CurrentUserData;
+    isYou: boolean;
 }

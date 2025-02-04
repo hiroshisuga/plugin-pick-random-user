@@ -8,6 +8,7 @@ import { PickedUser, UsersMoreInformationGraphqlResponse } from '../pick-random-
 import { PanelInformationFromPresenter, PickRandomUserPanelComponentProps } from './types';
 import { Role } from '../pick-random-user/enums';
 import { intlMessages } from '../../intlMessages';
+import Styled from './styles';
 
 const MAX_NAMES_TO_SHOW = 3;
 const DATA_CHANNEL_LOADING_TOLERANCE_TIMEOUT = 3000;
@@ -174,25 +175,28 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
     if (currentUser?.presenter) {
       if (usersToBePicked?.length > 0) {
         return (
-          <button
-            type="button"
-            className="button-style"
-            onClick={() => {
-              handlePickRandomUser();
-            }}
-          >
-            {
-            (pickedUserWithEntryId)
-              ? intl.formatMessage(intlMessages.pickRandomUserButtonLabelAgain)
-              : intl.formatMessage(intlMessages.pickRandomUserButtonLabelRole, { 0: userRole })
-            }
-          </button>
+          <Styled.PickRandomUserButtonWrapper>
+            <Styled.PickRandomUserButton
+              type="button"
+              onClick={() => {
+                handlePickRandomUser();
+              }}
+            >
+              {
+              (pickedUserWithEntryId)
+                ? intl.formatMessage(intlMessages.pickRandomUserButtonLabelAgain)
+                : intl.formatMessage(intlMessages.pickRandomUserButtonLabelRole, { 0: userRole })
+              }
+            </Styled.PickRandomUserButton>
+          </Styled.PickRandomUserButtonWrapper>
         );
       }
       return (
-        <p>
-          {intl.formatMessage(intlMessages.noUsersAvailableWarning, { 0: userRole })}
-        </p>
+        <Styled.PickRandomUserButtonWrapper>
+          <p>
+            {intl.formatMessage(intlMessages.noUsersAvailableWarning, { 0: userRole })}
+          </p>
+        </Styled.PickRandomUserButtonWrapper>
       );
     }
     return null;
@@ -212,16 +216,12 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
   if (!hasPermissionToSeePanel) return null;
 
   return (
-    <div
-      style={{
-        width: '100%', height: '100%', alignItems: 'flex-start', display: 'flex', flexDirection: 'column',
-      }}
-    >
-      <div className="moderator-view-wrapper">
-        <p className="moderator-view-label">{intl.formatMessage(intlMessages.options)}</p>
-        <p className="moderator-view-value">
-          <label className="check-box-label-container" htmlFor="includeModerators">
-            <input
+    <Styled.PanelContainer>
+      <Styled.PanelSectionWrapperNotGrow>
+        <Styled.PanelSubTitle>{intl.formatMessage(intlMessages.options)}</Styled.PanelSubTitle>
+        <Styled.OptionsWrapper>
+          <Styled.OptionContainer htmlFor="includeModerators">
+            <Styled.MaterialSwitch
               type="checkbox"
               id="includeModerators"
               disabled={!currentUser?.presenter}
@@ -231,11 +231,16 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
               }}
               name="options"
               value="includeModerators"
+              inputProps={{
+                'aria-label': intl.formatMessage(intlMessages.includeModerators),
+              }}
             />
-            <span className="check-box-label">{intl.formatMessage(intlMessages.includeModerators)}</span>
-          </label>
-          <label className="check-box-label-container" htmlFor="includePresenter">
-            <input
+            <Styled.OptionLabel>
+              {intl.formatMessage(intlMessages.includeModerators)}
+            </Styled.OptionLabel>
+          </Styled.OptionContainer>
+          <Styled.OptionContainer htmlFor="includePresenter">
+            <Styled.MaterialSwitch
               type="checkbox"
               id="includePresenter"
               disabled={!currentUser?.presenter}
@@ -245,11 +250,16 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
               }}
               name="options"
               value="includePresenter"
+              inputProps={{
+                'aria-label': intl.formatMessage(intlMessages.includePresenter),
+              }}
             />
-            <span className="check-box-label">{intl.formatMessage(intlMessages.includePresenter)}</span>
-          </label>
-          <label className="check-box-label-container" htmlFor="includePickedUsers">
-            <input
+            <Styled.OptionLabel>
+              {intl.formatMessage(intlMessages.includePresenter)}
+            </Styled.OptionLabel>
+          </Styled.OptionContainer>
+          <Styled.OptionContainer htmlFor="includePickedUsers">
+            <Styled.MaterialSwitch
               type="checkbox"
               id="includePickedUsers"
               disabled={!currentUser?.presenter}
@@ -259,44 +269,54 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
               }}
               name="options"
               value="includePickedUsers"
+              inputProps={{
+                'aria-label': intl.formatMessage(intlMessages.includePickedUsers),
+              }}
             />
-            <span className="check-box-label">{intl.formatMessage(intlMessages.includePickedUsers)}</span>
-          </label>
-        </p>
-      </div>
-      <div className="moderator-view-wrapper">
-        <p className="moderator-view-label">{intl.formatMessage(intlMessages.availableForSelection)}</p>
-        <p className="moderator-view-value">
+            <Styled.OptionLabel>
+              {intl.formatMessage(intlMessages.includePickedUsers)}
+            </Styled.OptionLabel>
+          </Styled.OptionContainer>
+        </Styled.OptionsWrapper>
+      </Styled.PanelSectionWrapperNotGrow>
+      <Styled.PanelSectionWrapperNotGrow>
+        <Styled.PanelSubTitle>
+          {intl.formatMessage(intlMessages.availableForSelection)}
+        </Styled.PanelSubTitle>
+        <Styled.OptionsWrapper>
           {usersToBePicked?.length}
           {' '}
           {userRole}
           :
           {' '}
           {makeHorizontalListOfNames(usersToBePicked)}
-        </p>
-      </div>
-      <div className="moderator-view-wrapper">
-        <div className="moderator-view-wrapper-title">
-          <p className="moderator-view-label">{intl.formatMessage(intlMessages.previouslyPicked)}</p>
-          {currentUser?.presenter && (
-            <button
+        </Styled.OptionsWrapper>
+      </Styled.PanelSectionWrapperNotGrow>
+      <Styled.PanelSectionWrapperGrowScrollable>
+        <Styled.AlreadyPickedWarpper>
+          <Styled.PanelSubTitle>
+            {intl.formatMessage(intlMessages.previouslyPicked)}
+          </Styled.PanelSubTitle>
+          {currentUser?.presenter && pickedUserFromDataChannel?.data?.length > 0 && (
+            <Styled.CleanAllButton
               type="button"
-              className="clickable"
               onClick={() => {
                 deletePickedUser([RESET_DATA_CHANNEL]);
               }}
             >
               {intl.formatMessage(intlMessages.clearAll)}
-            </button>
+            </Styled.CleanAllButton>
           )}
-        </div>
-        <ul className="moderator-view-list">
-          {
-            makeVerticalListOfNames(pickedUserFromDataChannel?.data)
-          }
-        </ul>
-      </div>
+        </Styled.AlreadyPickedWarpper>
+        <Styled.ScrollboxVertical>
+          <ul>
+            {
+              makeVerticalListOfNames(pickedUserFromDataChannel?.data)
+            }
+          </ul>
+        </Styled.ScrollboxVertical>
+      </Styled.PanelSectionWrapperGrowScrollable>
       {renderButton(userRole)}
-    </div>
+    </Styled.PanelContainer>
   );
 }

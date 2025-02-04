@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 import { PickedUserViewComponentProps } from './types';
+import Styled from './styles';
+import { Role } from '../../pick-random-user/enums';
 
 export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
   const {
@@ -8,6 +10,7 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
     pickedUserWithEntryId,
     currentUser,
     updatePickedRandomUser,
+    isYou,
   } = props;
 
   useEffect(() => {
@@ -28,25 +31,23 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
   }, []);
 
   return (
-    <div
-      style={{
-        width: '100%', height: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column',
-      }}
-    >
-      <h1 className="title">{title}</h1>
+    <Styled.AvatarContainer>
+      <Styled.Title>{title}</Styled.Title>
       {
         (pickedUserWithEntryId) ? (
           <>
-            <div
-              className="modal-avatar"
+            <Styled.ModalAvatar
+              viewer={pickedUserWithEntryId?.pickedUser.presenter}
+              isYou={isYou}
+              moderator={pickedUserWithEntryId?.pickedUser.role === Role.MODERATOR}
               style={{ backgroundColor: `${pickedUserWithEntryId.pickedUser?.color}` }}
             >
               {pickedUserWithEntryId.pickedUser?.name.slice(0, 2)}
-            </div>
-            <p className="user-name">{pickedUserWithEntryId.pickedUser?.name}</p>
+            </Styled.ModalAvatar>
+            <Styled.UserName>{pickedUserWithEntryId.pickedUser?.name}</Styled.UserName>
           </>
         ) : null
       }
-    </div>
+    </Styled.AvatarContainer>
   );
 }

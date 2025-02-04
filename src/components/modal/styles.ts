@@ -1,4 +1,7 @@
-.plugin-modal {
+import styled from 'styled-components';
+import * as ReactModal from 'react-modal';
+
+const PluginModal = styled(ReactModal)`
   position: relative;
   z-index: 900 !important;
 
@@ -56,9 +59,9 @@
   @media only screen and (min-width: 40.063em) {
       max-width: 80vw;
   }
-}
+`;
 
-.modal-overlay {
+const ModalOverlay = `
   z-index: 900;
   display: flex;
   align-items: center;
@@ -69,116 +72,32 @@
   right: 0;
   bottom: 0;
   background-color: rgba(6, 23, 42, 0.75);
-}
+`;
 
-.title {
-  font-weight: 600;
-  font-size: 20px;
-}
-
-.modal-avatar {
-height: 6rem;
-width: 6rem;
-border-radius: 50%;
-display: flex;
-justify-content: center;
-align-items: center;
-color: white;
-font-size: 2.75rem;
-font-weight: 400;
-margin-bottom: .25rem;
-text-transform: capitalize;
-}
-
-.user-name {
-  font-size: 30px;
-  font-weight: 500;
-}
-
-.moderator-view-label {
-  margin: 5px 0px;
-  font-weight: 600;
-  font-size: 20px;
-}
-
-.moderator-view-value {
+const ModalContainer = styled.div`
+  width: 100%;
+  align-items: flex-end;
   display: flex;
   flex-direction: column;
-  font-size: 18px;
-  padding-left: 40px;
-}
+`;
 
-.moderator-view-wrapper {
-  align-items: flex-start;
-  margin-top: 20px;
-}
-
-.moderator-view-list {
-  font-size: 18px;
-  list-style-type: none;
-}
-
-.clickable-close{
+const ButtonClose = styled.button`
   font-size: 40px;
   background: none;
-	color: inherit;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
-  border: none;
-}
-
-.clickable-close:hover {
-  background-color: #EEE;
-}
-
-.clickable {
-  padding: 1px 10px;
-  margin-left: 8px;
-  font-size: 15px;
-  background: #efefef;
-  border: none;
-	color: inherit;
-  border-radius: 8px;
-	cursor: pointer;
-}
-
-.clickable:hover {
-  background-color: #ddd;
-}
-
-.moderator-view-wrapper-title {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.check-box-label {
-  margin-left: 5px;
-}
-
-.check-box-label-container {
-  display: flex;
-  align-items: center;
-}
-
-.button-style {
-  border: 3px solid transparent;
-  overflow: visible;
-  display: inline-block;
-  background-color: #0F70D7;
-  color: #FFF;
-  border-radius: 2px;
-  font-weight: 600;
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
+  color: inherit;
+  font: inherit;
   cursor: pointer;
-  user-select: none;
-  padding: 8px 15px;
-}
+  outline: inherit;
+  border: none;
 
-.button-style:hover {
-  background-color: #0C57A7;
-}
+  &:hover {
+    background-color: #EEE;
+  }
+`;
+
+export default {
+  PluginModal,
+  ModalOverlay,
+  ModalContainer,
+  ButtonClose,
+};

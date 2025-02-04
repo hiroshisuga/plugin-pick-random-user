@@ -1,8 +1,8 @@
 import * as React from 'react';
-import * as ReactModal from 'react-modal';
 import { PickUserModalProps } from './types';
-import './style.css';
 import { PickedUserViewComponent } from './picked-user-view/component';
+import Styled from './styles';
+import './raw_styles.css';
 import { intlMessages } from '../../intlMessages';
 
 export function PickUserModal(props: PickUserModalProps) {
@@ -15,25 +15,21 @@ export function PickUserModal(props: PickUserModalProps) {
     currentUser,
   } = props;
 
-  const title = (pickedUserWithEntryId?.pickedUser?.userId === currentUser?.userId)
+  const isYou = (pickedUserWithEntryId?.pickedUser?.userId === currentUser?.userId);
+
+  const title = isYou
     ? intl.formatMessage(intlMessages.youWerePicked)
     : intl.formatMessage(intlMessages.pickedUser);
 
   return (
-    <ReactModal
-      className="plugin-modal"
+    <Styled.PluginModal
       overlayClassName="modal-overlay"
       isOpen={showModal}
       onRequestClose={handleCloseModal}
     >
-      <div
-        style={{
-          width: '100%', alignItems: 'flex-end', display: 'flex', flexDirection: 'column',
-        }}
-      >
-        <button
+      <Styled.ModalContainer>
+        <Styled.ButtonClose
           type="button"
-          className="clickable-close"
           onClick={() => {
             handleCloseModal();
           }}
@@ -42,16 +38,17 @@ export function PickUserModal(props: PickUserModalProps) {
           <i
             className="icon-bbb-close"
           />
-        </button>
-      </div>
+        </Styled.ButtonClose>
+      </Styled.ModalContainer>
       <PickedUserViewComponent
         {...{
           currentUser,
           updatePickedRandomUser,
           pickedUserWithEntryId,
           title,
+          isYou,
         }}
       />
-    </ReactModal>
+    </Styled.PluginModal>
   );
 }
