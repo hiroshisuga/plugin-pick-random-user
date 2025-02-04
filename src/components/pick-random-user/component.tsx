@@ -69,7 +69,6 @@ function PickRandomUserPlugin({ pluginApi, intl }: PickRandomUserPluginProps) {
             intl={intl}
             currentUser={currentUser}
             setShowModal={setShowModal}
-            pickedUserWithEntryId={pickedUserWithEntryId}
           />
         </React.StrictMode>,
       );

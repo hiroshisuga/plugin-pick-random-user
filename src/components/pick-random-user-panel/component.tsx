@@ -46,7 +46,6 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
   const {
     pluginApi,
     intl,
-    pickedUserWithEntryId,
     setShowModal,
     currentUser,
   } = props;
@@ -183,7 +182,7 @@ export function PickRandomUserPanelComponent(props: PickRandomUserPanelComponent
               }}
             >
               {
-              (pickedUserWithEntryId)
+              (pickedUserFromDataChannel?.data?.length > 0)
                 ? intl.formatMessage(intlMessages.pickRandomUserButtonLabelAgain)
                 : intl.formatMessage(intlMessages.pickRandomUserButtonLabelRole, { 0: userRole })
               }
