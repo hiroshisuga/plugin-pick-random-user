@@ -37,10 +37,9 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
         (pickedUserWithEntryId) ? (
           <>
             <Styled.ModalAvatar
-              viewer={pickedUserWithEntryId?.pickedUser.presenter}
+              viewer={pickedUserWithEntryId?.pickedUser.role === Role.VIEWER}
               isYou={isYou}
               moderator={pickedUserWithEntryId?.pickedUser.role === Role.MODERATOR}
-              style={{ backgroundColor: `${pickedUserWithEntryId.pickedUser?.color}` }}
             >
               {pickedUserWithEntryId.pickedUser?.name.slice(0, 2)}
             </Styled.ModalAvatar>

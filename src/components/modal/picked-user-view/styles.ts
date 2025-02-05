@@ -11,13 +11,20 @@ const AvatarContainer = styled.div`
 const ModalAvatar = styled.div<{isYou: boolean, viewer: boolean, moderator: boolean}>`
   height: 6rem;
   width: 6rem;
-  border-radius: 50%;
+  ${({ moderator }) => moderator && `
+    border-radius: 6px;
+  `}
+
+  ${({ moderator }) => !moderator && `
+    border-radius: 50%;
+  `}
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
   font-size: 2.75rem;
   font-weight: 400;
+  margin-top: 0.5rem;
   margin-bottom: .25rem;
   text-transform: capitalize;
   ${({ viewer }) => viewer && `background-color: ${colorUserViewer};`}
@@ -25,7 +32,7 @@ const ModalAvatar = styled.div<{isYou: boolean, viewer: boolean, moderator: bool
   ${({ isYou }) => isYou && `background-color: ${colorUserYou};`}
 `;
 
-const UserName = styled.p`
+const UserName = styled.span`
   font-size: 30px;
   font-weight: 500;
 `;
