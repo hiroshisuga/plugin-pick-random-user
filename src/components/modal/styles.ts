@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import * as ReactModal from 'react-modal';
+import ReactModal from 'react-modal';
 
 const PluginModal = styled(ReactModal)`
   position: relative;
