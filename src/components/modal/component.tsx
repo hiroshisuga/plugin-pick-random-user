@@ -1,106 +1,54 @@
-import { useEffect, useState } from 'react';
 import * as React from 'react';
-import * as ReactModal from 'react-modal';
 import { PickUserModalProps } from './types';
-import './style.css';
 import { PickedUserViewComponent } from './picked-user-view/component';
-import { PresenterViewComponent } from './presenter-view/component';
+import Styled from './styles';
+import './raw_styles.css';
+import { intlMessages } from '../../intlMessages';
 
 export function PickUserModal(props: PickUserModalProps) {
   const {
+    intl,
     showModal,
     handleCloseModal,
-    users,
     updatePickedRandomUser,
     pickedUserWithEntryId,
-    handlePickRandomUser,
     currentUser,
-    filterOutPresenter,
-    setFilterOutPresenter,
-    userFilterViewer,
-    setUserFilterViewer,
-    filterOutPickedUsers,
-    setFilterOutPickedUsers,
-    dataChannelPickedUsers,
-    deletionFunction,
-    dispatcherPickedUser,
   } = props;
 
-  let userRole: string;
-  if (userFilterViewer) {
-    userRole = (users?.length !== 1) ? 'viewers' : 'viewer';
-  } else {
-    userRole = (users?.length !== 1) ? 'users' : 'user';
-  }
-  const title = (pickedUserWithEntryId?.pickedUser?.userId === currentUser?.userId)
-    ? 'You have been randomly picked'
-    : 'Randomly picked user';
+  const isYou = (pickedUserWithEntryId?.pickedUser?.userId === currentUser?.userId);
 
-  const [showPresenterView, setShowPresenterView] = useState<boolean>(
-    currentUser?.presenter && !pickedUserWithEntryId,
-  );
-  useEffect(() => {
-    setShowPresenterView(currentUser?.presenter && !pickedUserWithEntryId);
-  }, [currentUser, pickedUserWithEntryId]);
+  const title = isYou
+    ? intl.formatMessage(intlMessages.youWerePicked)
+    : intl.formatMessage(intlMessages.pickedUser);
+
   return (
-    <ReactModal
-      className="plugin-modal"
+    <Styled.PluginModal
       overlayClassName="modal-overlay"
       isOpen={showModal}
       onRequestClose={handleCloseModal}
     >
-      <div
-        style={{
-          width: '100%', alignItems: 'flex-end', display: 'flex', flexDirection: 'column',
-        }}
-      >
-        <button
+      <Styled.ModalContainer>
+        <Styled.ButtonClose
           type="button"
-          className="clickable-close"
           onClick={() => {
             handleCloseModal();
           }}
-          aria-label="Close button"
+          aria-label={intl.formatMessage(intlMessages.closeButton)}
         >
           <i
             className="icon-bbb-close"
           />
-        </button>
-      </div>
-      {
-        showPresenterView
-          ? (
-            <PresenterViewComponent
-              {...{
-                filterOutPresenter,
-                setFilterOutPresenter,
-                userFilterViewer,
-                setUserFilterViewer,
-                filterOutPickedUsers,
-                setFilterOutPickedUsers,
-                deletionFunction,
-                handlePickRandomUser,
-                dataChannelPickedUsers,
-                pickedUserWithEntryId,
-                users,
-                userRole,
-                dispatcherPickedUser,
-              }}
-            />
-          ) : (
-            <PickedUserViewComponent
-              {...{
-                pickedUserWithEntryId,
-                title,
-                updatePickedRandomUser,
-                currentUser,
-                setShowPresenterView,
-                dispatcherPickedUser,
-              }}
-            />
-          )
-
-      }
-    </ReactModal>
+        </Styled.ButtonClose>
+      </Styled.ModalContainer>
+      <PickedUserViewComponent
+        {...{
+          currentUser,
+          updatePickedRandomUser,
+          pickedUserWithEntryId,
+          title,
+          isYou,
+        }}
+      />
+    </Styled.PluginModal>
   );
 }

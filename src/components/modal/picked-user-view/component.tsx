@@ -1,5 +1,8 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { PickedUserViewComponentProps } from './types';
+import Styled from './styles';
+import { Role } from '../../pick-random-user/enums';
 
 export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
   const {
@@ -7,19 +10,18 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
     pickedUserWithEntryId,
     currentUser,
     updatePickedRandomUser,
-    setShowPresenterView,
-    dispatcherPickedUser,
+    isYou,
   } = props;
 
-  React.useEffect(() => {
-    if (currentUser?.presenter) {
+  useEffect(() => {
+    if (currentUser?.presenter && pickedUserWithEntryId) {
       updatePickedRandomUser(pickedUserWithEntryId.entryId, {
         ...pickedUserWithEntryId.pickedUser,
         isPresenterViewing: true,
       });
     }
     return () => {
-      if (currentUser?.presenter) {
+      if (currentUser?.presenter && pickedUserWithEntryId) {
         updatePickedRandomUser(pickedUserWithEntryId.entryId, {
           ...pickedUserWithEntryId.pickedUser,
           isPresenterViewing: false,
@@ -28,37 +30,23 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
     };
   }, []);
 
-  const handleBackToPresenterView = () => {
-    if (currentUser?.presenter) {
-      setShowPresenterView(true);
-      dispatcherPickedUser(null);
-    }
-  };
   return (
-    <div
-      style={{
-        width: '100%', height: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column',
-      }}
-    >
-      <h1 className="title">{title}</h1>
+    <Styled.AvatarContainer>
+      <Styled.Title>{title}</Styled.Title>
       {
         (pickedUserWithEntryId) ? (
           <>
-            <div
-              className="modal-avatar"
-              style={{ backgroundColor: `${pickedUserWithEntryId.pickedUser?.color}` }}
+            <Styled.ModalAvatar
+              viewer={pickedUserWithEntryId?.pickedUser.role === Role.VIEWER}
+              isYou={isYou}
+              moderator={pickedUserWithEntryId?.pickedUser.role === Role.MODERATOR}
             >
               {pickedUserWithEntryId.pickedUser?.name.slice(0, 2)}
-            </div>
-            <p className="user-name">{pickedUserWithEntryId.pickedUser?.name}</p>
+            </Styled.ModalAvatar>
+            <Styled.UserName>{pickedUserWithEntryId.pickedUser?.name}</Styled.UserName>
           </>
         ) : null
       }
-      {
-        (currentUser?.presenter) ? (
-          <button type="button" onClick={handleBackToPresenterView}>back</button>
-        ) : null
-      }
-    </div>
+    </Styled.AvatarContainer>
   );
 }

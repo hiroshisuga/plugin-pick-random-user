@@ -1,3 +1,6 @@
+import { PluginApi } from 'bigbluebutton-html-plugin-sdk';
+import { IntlShape } from 'react-intl';
+
 export interface PickedUser {
     isPresenterViewing: boolean;
     presenter: boolean;
@@ -13,18 +16,12 @@ export interface PickedUserWithEntryId {
 }
 
 export interface PickRandomUserPluginProps {
-    pluginName: string,
-    pluginUuid: string,
+    pluginApi: PluginApi,
+    intl: IntlShape,
 }
 
 export interface UsersMoreInformationGraphqlResponse {
     user: PickedUser[];
-}
-
-export interface ModalInformationFromPresenter {
-    skipModerators: boolean;
-    skipPresenter: boolean;
-    includePickedUsers: boolean;
 }
 
 export interface DataChannelArrayMessages <T> {
