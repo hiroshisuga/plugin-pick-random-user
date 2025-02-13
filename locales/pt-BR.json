@@ -1,5 +1,5 @@
 {
-	"app.pickRandomUser.title": "Selecionar Usuário Aleatório",
+  "app.pickRandomUser.title": "Sortear Participante",
   "app.pickRandomUser.options": "Opções",
   "app.pickRandomUser.includeModerators": "Incluir moderadores",
   "app.pickRandomUser.includePresenter": "Incluir apresentador",
@@ -14,7 +14,7 @@
   "app.pickRandomUser.viewers": "espectadores",
   "app.pickRandomUser.user": "participante",
   "app.pickRandomUser.users": "participantes",
-  "app.pickRandomUser.youWerePicked": "Você foi selecionado aleatóriamente",
-  "app.pickRandomUser.pickedUser": "Usuário selecionado aleatóriamente",
+  "app.pickRandomUser.youWerePicked": "Você foi sorteado",
+  "app.pickRandomUser.pickedUser": "Usuário sorteado",
   "app.pickRandomUser.modal.closeButton": "Botão de Fechar"
 }
