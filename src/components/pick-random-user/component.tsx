@@ -82,11 +82,16 @@ function PickRandomUserPlugin({ pluginApi, intl }: PickRandomUserPluginProps) {
   };
 
   useEffect(() => {
-    if (currentUser?.role !== Role.VIEWER) {
+    if (currentUser?.role === Role.MODERATOR) {
       const generatedIds = pluginApi.setGenericContentItems([
         new GenericContentSidekickArea(genericContentSidekickArea),
       ]);
       genericContentId.current = generatedIds.pop();
+      return;
+    }
+    if (genericContentId.current) {
+      pluginApi.setGenericContentItems([]);
+      genericContentId.current = '';
     }
   }, [
     intl,
