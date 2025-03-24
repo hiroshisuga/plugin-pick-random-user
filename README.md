@@ -26,7 +26,7 @@ To use the plugin in BigBlueButton, send this parameter along in create call:
 pluginManifests=[{"url":"<your-domain>/path/to/manifest.json"}]
 ```
 
-Or additionally, you can add this same configuration in the `.properties` file from `bbb-web` in `/usr/share/bbb-web/WEB-INF/classes/bigbluebutton.properties`
+Or additionally, you can add this same configuration in `/etc/bigbluebutton/bbb-web.properties`.
 
 
 ## Development mode
