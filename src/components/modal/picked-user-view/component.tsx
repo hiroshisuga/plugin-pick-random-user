@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { PickedUserViewComponentProps } from './types';
+import '../style.css';
 
 export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
   const {

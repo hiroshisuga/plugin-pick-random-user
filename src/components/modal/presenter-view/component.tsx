@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RESET_DATA_CHANNEL } from 'bigbluebutton-html-plugin-sdk';
 import { DataChannelEntryResponseType } from 'bigbluebutton-html-plugin-sdk/dist/cjs/data-channel/types';
 
+import * as Styled from './styles';
 import { PickedUser } from '../../pick-random-user/types';
 import { PresenterViewComponentProps } from './types';
 
@@ -51,15 +52,11 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
   } = props;
 
   return (
-    <div
-      style={{
-        width: '100%', height: '100%', alignItems: 'flex-start', display: 'flex', flexDirection: 'column',
-      }}
-    >
-      <div className="moderator-view-wrapper">
-        <p className="moderator-view-label">Options</p>
-        <p className="moderator-view-value">
-          <label className="check-box-label-container" htmlFor="skipModerators">
+    <Styled.PresenterViewContentWrapper>
+      <Styled.PresenterViewSectionWrapper>
+        <Styled.PresenterViewSectionTitle>Options</Styled.PresenterViewSectionTitle>
+        <Styled.PresenterViewSectionContent>
+          <Styled.CheckboxLabelWrapper htmlFor="skipModerators">
             <input
               type="checkbox"
               id="skipModerators"
@@ -70,9 +67,9 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               name="options"
               value="skipModerators"
             />
-            <span className="check-box-label">Skip moderators</span>
-          </label>
-          <label className="check-box-label-container" htmlFor="skipPresenter">
+            <Styled.CheckboxLabel>Skip moderators</Styled.CheckboxLabel>
+          </Styled.CheckboxLabelWrapper>
+          <Styled.CheckboxLabelWrapper htmlFor="skipPresenter">
             <input
               type="checkbox"
               id="skipPresenter"
@@ -83,9 +80,9 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               name="options"
               value="skipPresenter"
             />
-            <span className="check-box-label">Skip Presenter</span>
-          </label>
-          <label className="check-box-label-container" htmlFor="includePickedUsers">
+            <Styled.CheckboxLabel>Skip Presenter</Styled.CheckboxLabel>
+          </Styled.CheckboxLabelWrapper>
+          <Styled.CheckboxLabelWrapper htmlFor="includePickedUsers">
             <input
               type="checkbox"
               id="includePickedUsers"
@@ -96,24 +93,24 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               name="options"
               value="includePickedUsers"
             />
-            <span className="check-box-label">Include already picked users</span>
-          </label>
-        </p>
-      </div>
-      <div className="moderator-view-wrapper">
-        <p className="moderator-view-label">Available for selection</p>
-        <p className="moderator-view-value">
+            <Styled.CheckboxLabel>Include already picked users</Styled.CheckboxLabel>
+          </Styled.CheckboxLabelWrapper>
+        </Styled.PresenterViewSectionContent>
+      </Styled.PresenterViewSectionWrapper>
+      <Styled.PresenterViewSectionWrapper>
+        <Styled.PresenterViewSectionTitle>Available for selection</Styled.PresenterViewSectionTitle>
+        <Styled.PresenterViewSectionContent>
           {users?.length}
           {' '}
           {userRole}
           :
           {' '}
           {makeHorizontalListOfNames(users)}
-        </p>
-      </div>
-      <div className="moderator-view-wrapper">
-        <div className="moderator-view-wrapper-title">
-          <p className="moderator-view-label">Previously picked</p>
+        </Styled.PresenterViewSectionContent>
+      </Styled.PresenterViewSectionWrapper>
+      <Styled.PresenterViewSectionWrapper>
+        <Styled.PresenterViewSectionTitleWrapper>
+          <Styled.PresenterViewSectionTitle>Previously picked</Styled.PresenterViewSectionTitle>
           <button
             type="button"
             className="clickable"
@@ -123,18 +120,17 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
           >
             Clear All
           </button>
-        </div>
-        <ul className="moderator-view-list">
+        </Styled.PresenterViewSectionTitleWrapper>
+        <Styled.PresenterViewSectionList>
           {
             makeVerticalListOfNames(dataChannelPickedUsers)
           }
-        </ul>
-      </div>
+        </Styled.PresenterViewSectionList>
+      </Styled.PresenterViewSectionWrapper>
       {
         users?.length > 0 ? (
-          <button
+          <Styled.PickUserButton
             type="button"
-            className="button-style"
             onClick={() => {
               handlePickRandomUser();
             }}
@@ -142,7 +138,7 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
             {
             (pickedUserWithEntryId) ? 'Pick again' : `Pick ${userRole}`
             }
-          </button>
+          </Styled.PickUserButton>
         ) : (
           <p>
             No
@@ -153,6 +149,6 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
           </p>
         )
       }
-    </div>
+    </Styled.PresenterViewContentWrapper>
   );
 }
