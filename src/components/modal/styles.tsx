@@ -73,10 +73,10 @@ const CloseButton = styled.button`
 `;
 
 const CloseButtonWrapper = styled.div`
-  width: '100%';
-  align-items: 'flex-end';
-  display: 'flex';
-  flex-direction: 'column';  
+  width: 100%;
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column; 
 `;
 
 export { PluginModal, CloseButton, CloseButtonWrapper };

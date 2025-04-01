@@ -121,11 +121,13 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
             Clear All
           </button>
         </Styled.PresenterViewSectionTitleWrapper>
-        <Styled.PresenterViewSectionList>
-          {
-            makeVerticalListOfNames(dataChannelPickedUsers)
-          }
-        </Styled.PresenterViewSectionList>
+        <Styled.PresenterViewSectionListWrapper>
+          <Styled.PresenterViewSectionList>
+            {
+              makeVerticalListOfNames(dataChannelPickedUsers)
+            }
+          </Styled.PresenterViewSectionList>
+        </Styled.PresenterViewSectionListWrapper>
       </Styled.PresenterViewSectionWrapper>
       {
         users?.length > 0 ? (

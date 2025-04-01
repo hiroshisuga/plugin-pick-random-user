@@ -9,8 +9,10 @@ const PresenterViewContentWrapper = styled.div`
 `;
 
 const PresenterViewSectionWrapper = styled.div`
+  display: flex;
   align-items: flex-start;
-  margin-top: 20px;
+  flex-direction: column;
+  max-height: 30%;
 `;
 
 const PresenterViewSectionTitle = styled.div`
@@ -25,8 +27,16 @@ const PresenterViewSectionTitleWrapper = styled.div`
   align-items: center;
 `;
 
+const PresenterViewSectionListWrapper = styled.div`
+  overflow-y: auto;
+  max-height: 10rem;
+  margin-bottom: .75rem;
+  width: 100%;
+`;
+
 const PresenterViewSectionList = styled.ul`
   font-size: 18px;
+  margin: 0;
   list-style-type: none;
 `;
 
@@ -74,6 +84,7 @@ export {
   PresenterViewSectionTitle,
   PresenterViewSectionTitleWrapper,
   PresenterViewSectionList,
+  PresenterViewSectionListWrapper,
   PresenterViewSectionContent,
   CheckboxLabelWrapper,
   CheckboxLabel,

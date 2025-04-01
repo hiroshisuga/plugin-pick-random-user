@@ -48,11 +48,7 @@ export function PickUserModal(props: PickUserModalProps) {
       isOpen={showModal}
       onRequestClose={handleCloseModal}
     >
-      <div
-        style={{
-          width: '100%', alignItems: 'flex-end', display: 'flex', flexDirection: 'column',
-        }}
-      >
+      <Styled.CloseButtonWrapper>
         <Styled.CloseButton
           type="button"
           onClick={() => {
@@ -64,7 +60,7 @@ export function PickUserModal(props: PickUserModalProps) {
             className="icon-bbb-close"
           />
         </Styled.CloseButton>
-      </div>
+      </Styled.CloseButtonWrapper>
       {
         showPresenterView
           ? (
