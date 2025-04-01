@@ -61,10 +61,10 @@ export function PickUserModal(props: PickUserModalProps) {
     setShowPresenterView(currentUser?.presenter && !pickedUserWithEntryId);
     // Play audio when user is selected
     const isPingSoundEnabled = !isPluginSettingsLoading && pluginSettings?.pingSoundEnabled;
-    const pingSoundPath: string = pluginSettings?.pingSoundPath ? String(pluginSettings?.pingSoundPath) : 'resources/sounds/doorbell.mp3';
+    const pingSoundUrl: string = pluginSettings?.pingSoundUrl ? String(pluginSettings?.pingSoundUrl) : 'resources/sounds/doorbell.mp3';
     if (isPingSoundEnabled && pickedUserWithEntryId
       && pickedUserWithEntryId?.pickedUser?.userId === currentUser?.userId) {
-      const audio = new Audio(pingSoundPath);
+      const audio = new Audio(pingSoundUrl);
       audio.play();
       notifyRandomlyPickedUser(title);
     }
