@@ -111,15 +111,14 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
       <Styled.PresenterViewSectionWrapper>
         <Styled.PresenterViewSectionTitleWrapper>
           <Styled.PresenterViewSectionTitle>Previously picked</Styled.PresenterViewSectionTitle>
-          <button
+          <Styled.PresenterViewSectionClearAllButton
             type="button"
-            className="clickable"
             onClick={() => {
               deletionFunction([RESET_DATA_CHANNEL]);
             }}
           >
             Clear All
-          </button>
+          </Styled.PresenterViewSectionClearAllButton>
         </Styled.PresenterViewSectionTitleWrapper>
         <Styled.PresenterViewSectionListWrapper>
           <Styled.PresenterViewSectionList>

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import * as React from 'react';
 import * as Styled from './styles';
 import { PickUserModalProps } from './types';
-import './style.css';
 import { PickedUserViewComponent } from './picked-user-view/component';
 import { PresenterViewComponent } from './presenter-view/component';
 

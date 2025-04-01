@@ -21,6 +21,20 @@ const PresenterViewSectionTitle = styled.div`
   font-size: 20px;
 `;
 
+const PresenterViewSectionClearAllButton = styled.button`
+  padding: 1px 10px;
+  margin-left: 8px;
+  font-size: 15px;
+  background: #efefef;
+  border: none;
+  color: inherit;
+  border-radius: 8px;
+  cursor: pointer;
+  &:hover {
+    background-color: #ddd;
+  }
+`;
+
 const PresenterViewSectionTitleWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -89,4 +103,5 @@ export {
   CheckboxLabelWrapper,
   CheckboxLabel,
   PickUserButton,
+  PresenterViewSectionClearAllButton,
 };
