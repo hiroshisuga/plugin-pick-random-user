@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import * as React from 'react';
 import * as ReactModal from 'react-modal';
 import { pluginLogger } from 'bigbluebutton-html-plugin-sdk';
-import { PickUserModalProps } from './types';
+import { PickUserModalProps, WindowClientSettings } from './types';
 import './style.css';
 import { PickedUserViewComponent } from './picked-user-view/component';
 import { PresenterViewComponent } from './presenter-view/component';
 
 const TIMEOUT_CLOSE_NOTIFICATION = 5000;
+
+declare const window: WindowClientSettings;
 
 function notifyRandomlyPickedUser(message: string) {
   if (!('Notification' in window)) {
@@ -61,9 +63,13 @@ export function PickUserModal(props: PickUserModalProps) {
     setShowPresenterView(currentUser?.presenter && !pickedUserWithEntryId);
     // Play audio when user is selected
     const isPingSoundEnabled = !isPluginSettingsLoading && pluginSettings?.pingSoundEnabled;
-    const pingSoundUrl: string = pluginSettings?.pingSoundUrl ? String(pluginSettings?.pingSoundUrl) : 'resources/sounds/doorbell.mp3';
     if (isPingSoundEnabled && pickedUserWithEntryId
       && pickedUserWithEntryId?.pickedUser?.userId === currentUser?.userId) {
+      const { cdn, basename } = window.meetingClientSettings.public.app;
+      const host = cdn + basename;
+      const pingSoundUrl: string = pluginSettings?.pingSoundUrl
+        ? String(pluginSettings?.pingSoundUrl)
+        : `${host}/resources/sounds/doorbell.mp3`;
       const audio = new Audio(pingSoundUrl);
       audio.play();
       notifyRandomlyPickedUser(title);

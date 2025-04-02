@@ -31,7 +31,9 @@ public:
         pingSoundUrl: resources/sounds/doorbell.mp3 # This is the default and is not mandatory
 ```
 
-Some other possible `pingSoundUrl` are (URL can be relative, if the `mp3` sound is being served from within the BBB server as showed right below):
+Just a minor comment: This relative URLs can only be configured if the server on which BBB is running is not a cluster setup. If that's your case, you'll need to put the whole URL into the configuration. It's also worth mentioning that the default `pingSoundUrl` will work in cluser setups, so no worries on that.
+
+Some other possible `pingSoundUrl` are (and notice that this URL can be relative, if the `mp3` sound is being served from within the BBB server - and it's not a cluster setup - as showed right below):
 - resources/sounds/alarm.mp3  
 - resources/sounds/bbb-handRaise.mp3  
 - resources/sounds/LeftCall.mp3  

@@ -23,3 +23,15 @@ export interface PickUserModalProps {
   deletionFunction: DeleteEntryFunction;
   dispatcherPickedUser: PushEntryFunction;
 }
+
+export interface WindowClientSettings extends Window {
+  meetingClientSettings?: {
+    public: {
+      app: {
+        cdn: string;
+        basename: string;
+      }
+
+    }
+  }
+}
