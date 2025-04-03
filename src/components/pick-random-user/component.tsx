@@ -24,6 +24,8 @@ const LOCALE_REQUEST_OBJECT = (!process.env.NODE_ENV || process.env.NODE_ENV ===
 
 function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   BbbPluginSdk.initialize(uuid);
+  const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
+
   const [showModal, setShowModal] = useState<boolean>(false);
   const [
     pickedUserWithEntryId,
@@ -31,7 +33,17 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   const [userFilterViewer, setUserFilterViewer] = useState<boolean>(true);
   const [filterOutPresenter, setFilterOutPresenter] = useState<boolean>(true);
   const [filterOutPickedUsers, setFilterOutPickedUsers] = useState<boolean>(true);
-  const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
+
+  const { data: pluginSettings, loading: isPluginSettingsLoading } = pluginApi.usePluginSettings();
+
+  useEffect(() => {
+    if (!isPluginSettingsLoading
+      && pluginSettings
+      && pluginSettings.pingSoundEnabled) {
+      Notification.requestPermission();
+    }
+  }, [isPluginSettingsLoading, pluginSettings]);
+
   const currentUserInfo = pluginApi.useCurrentUser();
   const { data: currentUser } = currentUserInfo;
   const allUsersInfo = pluginApi
@@ -150,6 +162,8 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
     <>
       <PickUserModal
         {...{
+          pluginSettings,
+          isPluginSettingsLoading,
           intl,
           showModal,
           handleCloseModal,

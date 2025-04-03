@@ -81,8 +81,9 @@ const makeVerticalListOfNames = (
   list?: DataChannelEntryResponseType<PickedUser>[],
 ) => list?.filter((u) => !!u.payloadJson).map((u) => {
   const time = new Date(u.createdAt);
+  const timeMiliseconds = time.getTime();
   return (
-    <li key={u.payloadJson.userId}>
+    <li key={`${u.payloadJson.userId}-${timeMiliseconds}`}>
       {u.payloadJson.name}
       {' '}
       (
