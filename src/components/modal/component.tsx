@@ -1,11 +1,19 @@
 import { useEffect, useState } from 'react';
 import * as React from 'react';
 import * as ReactModal from 'react-modal';
+import { defineMessages } from 'react-intl';
 import { pluginLogger } from 'bigbluebutton-html-plugin-sdk';
 import { PickUserModalProps, WindowClientSettings } from './types';
 import './style.css';
 import { PickedUserViewComponent } from './picked-user-view/component';
 import { PresenterViewComponent } from './presenter-view/component';
+
+const intlMessages = defineMessages({
+  currentUserPicked: {
+    id: 'pickRandomUserPlugin.modal.pickedUserView.title.currentUserPicked',
+    description: 'Title to show that current user has been picked',
+  },
+});
 
 const TIMEOUT_CLOSE_NOTIFICATION = 5000;
 
@@ -63,7 +71,7 @@ export function PickUserModal(props: PickUserModalProps) {
         : `${host}/resources/sounds/doorbell.mp3`;
       const audio = new Audio(pingSoundUrl);
       audio.play();
-      notifyRandomlyPickedUser(title);
+      notifyRandomlyPickedUser(intl.formatMessage(intlMessages.currentUserPicked));
     }
   }, [currentUser, pickedUserWithEntryId]);
   return (

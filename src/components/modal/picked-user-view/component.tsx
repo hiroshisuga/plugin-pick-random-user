@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { defineMessages } from 'react-intl';
 import { PickedUserViewComponentProps } from './types';
 
@@ -27,7 +28,7 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
     dispatcherPickedUser,
   } = props;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentUser?.presenter) {
       updatePickedRandomUser(pickedUserWithEntryId.entryId, {
         ...pickedUserWithEntryId.pickedUser,
