@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { defineMessages } from 'react-intl';
 import { PickedUserViewComponentProps } from './types';
+import * as Styled from './styles';
 
 const intlMessages = defineMessages({
   currentUserPicked: {
@@ -57,30 +58,24 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
     ? intl.formatMessage(intlMessages.currentUserPicked)
     : intl.formatMessage(intlMessages.randomUserPicked);
   return (
-    <div
-      style={{
-        width: '100%', height: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column',
-      }}
-    >
-      <h1 className="title">{title}</h1>
+    <Styled.PickedUserViewWrapper>
+      <Styled.PickedUserViewTitle>{title}</Styled.PickedUserViewTitle>
       {
         (pickedUserWithEntryId) ? (
           <>
             {avatarUrl ? (
-              <img
+              <Styled.PickedUserAvatarImage
                 alt={`Avatar of user ${pickedUserWithEntryId.pickedUser.name}`}
                 src={avatarUrl}
-                className="modal-avatar-img"
               />
             ) : (
-              <div
-                className="modal-avatar"
-                style={{ backgroundColor: `${pickedUserWithEntryId.pickedUser?.color}` }}
+              <Styled.PickedUserAvatarInitials
+                background={pickedUserWithEntryId.pickedUser?.color}
               >
                 {pickedUserWithEntryId.pickedUser?.name.slice(0, 2)}
-              </div>
+              </Styled.PickedUserAvatarInitials>
             )}
-            <p className="user-name">{pickedUserWithEntryId.pickedUser?.name}</p>
+            <Styled.PickedUserName>{pickedUserWithEntryId.pickedUser?.name}</Styled.PickedUserName>
           </>
         ) : null
       }
@@ -91,6 +86,6 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
           </button>
         ) : null
       }
-    </div>
+    </Styled.PickedUserViewWrapper>
   );
 }
