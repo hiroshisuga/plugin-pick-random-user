@@ -126,7 +126,9 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
   return (
     <Styled.PresenterViewContentWrapper>
       <Styled.PresenterViewSectionWrapper>
-        <Styled.PresenterViewSectionTitle>{intl.formatMessage(intlMessages.optionsTitle)}</Styled.PresenterViewSectionTitle>
+        <Styled.PresenterViewSectionTitle>
+          {intl.formatMessage(intlMessages.optionsTitle)}
+        </Styled.PresenterViewSectionTitle>
         <Styled.PresenterViewSectionContent>
           <Styled.CheckboxLabelWrapper htmlFor="skipModerators">
             <input
@@ -139,7 +141,9 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               name="options"
               value="skipModerators"
             />
-            <Styled.CheckboxLabel>{intl.formatMessage(intlMessages.skipModeratorsLabel)}</Styled.CheckboxLabel>
+            <Styled.CheckboxLabel>
+              {intl.formatMessage(intlMessages.skipModeratorsLabel)}
+            </Styled.CheckboxLabel>
           </Styled.CheckboxLabelWrapper>
           <Styled.CheckboxLabelWrapper htmlFor="skipPresenter">
             <input
@@ -152,7 +156,9 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               name="options"
               value="skipPresenter"
             />
-            <Styled.CheckboxLabel>{intl.formatMessage(intlMessages.skipPresenterLabel)}</Styled.CheckboxLabel>
+            <Styled.CheckboxLabel>
+              {intl.formatMessage(intlMessages.skipPresenterLabel)}
+            </Styled.CheckboxLabel>
           </Styled.CheckboxLabelWrapper>
           <Styled.CheckboxLabelWrapper htmlFor="includePickedUsers">
             <input
@@ -165,12 +171,16 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               name="options"
               value="includePickedUsers"
             />
-            <Styled.CheckboxLabel>{intl.formatMessage(intlMessages.includePickedUsersLabel)}</Styled.CheckboxLabel>
+            <Styled.CheckboxLabel>
+              {intl.formatMessage(intlMessages.includePickedUsersLabel)}
+            </Styled.CheckboxLabel>
           </Styled.CheckboxLabelWrapper>
         </Styled.PresenterViewSectionContent>
       </Styled.PresenterViewSectionWrapper>
       <Styled.PresenterViewSectionWrapper>
-        <Styled.PresenterViewSectionTitle>{intl.formatMessage(intlMessages.availableTitle)}</Styled.PresenterViewSectionTitle>
+        <Styled.PresenterViewSectionTitle>
+          {intl.formatMessage(intlMessages.availableTitle)}
+        </Styled.PresenterViewSectionTitle>
         <Styled.PresenterViewSectionContent>
           {`${users?.length} ${userRoleLabel}: `}
           {makeHorizontalListOfNames(users)}
@@ -178,7 +188,9 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
       </Styled.PresenterViewSectionWrapper>
       <Styled.PresenterViewSectionWrapper>
         <Styled.PresenterViewSectionTitleWrapper>
-          <Styled.PresenterViewSectionTitle>{intl.formatMessage(intlMessages.previouslyPickedTitle)}</Styled.PresenterViewSectionTitle>
+          <Styled.PresenterViewSectionTitle>
+            {intl.formatMessage(intlMessages.previouslyPickedTitle)}
+          </Styled.PresenterViewSectionTitle>
           <Styled.PresenterViewSectionClearAllButton
             type="button"
             onClick={() => {
