@@ -1,10 +1,70 @@
 import * as React from 'react';
 import { RESET_DATA_CHANNEL } from 'bigbluebutton-html-plugin-sdk';
 import { DataChannelEntryResponseType } from 'bigbluebutton-html-plugin-sdk/dist/cjs/data-channel/types';
+import { defineMessages } from 'react-intl';
 
 import * as Styled from './styles';
 import { PickedUser } from '../../pick-random-user/types';
 import { PresenterViewComponentProps } from './types';
+
+const intlMessages = defineMessages({
+  optionsTitle: {
+    id: 'pickRandomUserPlugin.modal.presenterView.optionSection.title',
+    description: 'Title of the options section on modal`s presenter view',
+  },
+  skipModeratorsLabel: {
+    id: 'pickRandomUserPlugin.modal.presenterView.optionSection.skipModeratorsLabel',
+    description: 'Label of skip moderator`s option on modal`s presenter view',
+  },
+  skipPresenterLabel: {
+    id: 'pickRandomUserPlugin.modal.presenterView.optionSection.skipPresenterLabel',
+    description: 'Label of skip presenter`s option on modal`s presenter view',
+  },
+  includePickedUsersLabel: {
+    id: 'pickRandomUserPlugin.modal.presenterView.optionSection.includePickedUsersLabel',
+    description: 'Label of include picked users option on modal`s presenter view',
+  },
+  availableTitle: {
+    id: 'pickRandomUserPlugin.modal.presenterView.availableSection.title',
+    description: 'Title of the "available users" section on modal`s presenter view',
+  },
+  userLabel: {
+    id: 'pickRandomUserPlugin.modal.presenterView.availableSection.userLabel',
+    description: 'Label to count user in "available users" section on presenter view',
+  },
+  userLabelPlural: {
+    id: 'pickRandomUserPlugin.modal.presenterView.availableSection.userLabelPlural',
+    description: 'Label to count users in "available users" section on presenter view',
+  },
+  viewerLabel: {
+    id: 'pickRandomUserPlugin.modal.presenterView.availableSection.viewerLabel',
+    description: 'Label to count viewer in "available users" section on presenter view',
+  },
+  viewerLabelPlural: {
+    id: 'pickRandomUserPlugin.modal.presenterView.availableSection.viewerLabelPlural',
+    description: 'Label to count viewers in "available users" section on presenter view',
+  },
+  previouslyPickedTitle: {
+    id: 'pickRandomUserPlugin.modal.presenterView.previouslyPickedSection.title',
+    description: 'Title of the "previously picked" section on presenter view',
+  },
+  clearButtonLabel: {
+    id: 'pickRandomUserPlugin.modal.presenterView.previouslyPickedSection.clearButtonLabel',
+    description: 'Label of button to clear list of already picked users',
+  },
+  noUsersWarning: {
+    id: 'pickRandomUserPlugin.modal.presenterView.previouslyPickedSection.noUsersWarning',
+    description: 'Warning that there is no user to be picked',
+  },
+  pickButtonLabel: {
+    id: 'pickRandomUserPlugin.modal.presenterView.previouslyPickedSection.pickButtonLabel.pickUser',
+    description: 'Label of the button to pick another user',
+  },
+  pickAgainButtonLabel: {
+    id: 'pickRandomUserPlugin.modal.presenterView.previouslyPickedSection.pickButtonLabel.pickAgain',
+    description: 'Label of the button to pick another user',
+  },
+});
 
 const MAX_NAMES_TO_SHOW = 3;
 
@@ -38,6 +98,7 @@ const makeVerticalListOfNames = (
 
 export function PresenterViewComponent(props: PresenterViewComponentProps) {
   const {
+    intl,
     filterOutPresenter,
     setFilterOutPresenter,
     userFilterViewer,
@@ -49,13 +110,23 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
     dataChannelPickedUsers,
     pickedUserWithEntryId,
     users,
-    userRole,
   } = props;
 
+  let userRoleLabel: string;
+  const usersCountVariable = { 0: users?.length };
+  if (userFilterViewer) {
+    userRoleLabel = (users?.length !== 1)
+      ? intl.formatMessage(intlMessages.viewerLabelPlural, usersCountVariable)
+      : intl.formatMessage(intlMessages.viewerLabel, usersCountVariable);
+  } else {
+    userRoleLabel = (users?.length !== 1)
+      ? intl.formatMessage(intlMessages.userLabelPlural, usersCountVariable)
+      : intl.formatMessage(intlMessages.userLabel, usersCountVariable);
+  }
   return (
     <Styled.PresenterViewContentWrapper>
       <Styled.PresenterViewSectionWrapper>
-        <Styled.PresenterViewSectionTitle>Options</Styled.PresenterViewSectionTitle>
+        <Styled.PresenterViewSectionTitle>{intl.formatMessage(intlMessages.optionsTitle)}</Styled.PresenterViewSectionTitle>
         <Styled.PresenterViewSectionContent>
           <Styled.CheckboxLabelWrapper htmlFor="skipModerators">
             <input
@@ -68,7 +139,7 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               name="options"
               value="skipModerators"
             />
-            <Styled.CheckboxLabel>Skip moderators</Styled.CheckboxLabel>
+            <Styled.CheckboxLabel>{intl.formatMessage(intlMessages.skipModeratorsLabel)}</Styled.CheckboxLabel>
           </Styled.CheckboxLabelWrapper>
           <Styled.CheckboxLabelWrapper htmlFor="skipPresenter">
             <input
@@ -81,7 +152,7 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               name="options"
               value="skipPresenter"
             />
-            <Styled.CheckboxLabel>Skip Presenter</Styled.CheckboxLabel>
+            <Styled.CheckboxLabel>{intl.formatMessage(intlMessages.skipPresenterLabel)}</Styled.CheckboxLabel>
           </Styled.CheckboxLabelWrapper>
           <Styled.CheckboxLabelWrapper htmlFor="includePickedUsers">
             <input
@@ -94,31 +165,27 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               name="options"
               value="includePickedUsers"
             />
-            <Styled.CheckboxLabel>Include already picked users</Styled.CheckboxLabel>
+            <Styled.CheckboxLabel>{intl.formatMessage(intlMessages.includePickedUsersLabel)}</Styled.CheckboxLabel>
           </Styled.CheckboxLabelWrapper>
         </Styled.PresenterViewSectionContent>
       </Styled.PresenterViewSectionWrapper>
       <Styled.PresenterViewSectionWrapper>
-        <Styled.PresenterViewSectionTitle>Available for selection</Styled.PresenterViewSectionTitle>
+        <Styled.PresenterViewSectionTitle>{intl.formatMessage(intlMessages.availableTitle)}</Styled.PresenterViewSectionTitle>
         <Styled.PresenterViewSectionContent>
-          {users?.length}
-          {' '}
-          {userRole}
-          :
-          {' '}
+          {`${users?.length} ${userRoleLabel}: `}
           {makeHorizontalListOfNames(users)}
         </Styled.PresenterViewSectionContent>
       </Styled.PresenterViewSectionWrapper>
       <Styled.PresenterViewSectionWrapper>
         <Styled.PresenterViewSectionTitleWrapper>
-          <Styled.PresenterViewSectionTitle>Previously picked</Styled.PresenterViewSectionTitle>
+          <Styled.PresenterViewSectionTitle>{intl.formatMessage(intlMessages.previouslyPickedTitle)}</Styled.PresenterViewSectionTitle>
           <Styled.PresenterViewSectionClearAllButton
             type="button"
             onClick={() => {
               deletionFunction([RESET_DATA_CHANNEL]);
             }}
           >
-            Clear All
+            {intl.formatMessage(intlMessages.clearButtonLabel)}
           </Styled.PresenterViewSectionClearAllButton>
         </Styled.PresenterViewSectionTitleWrapper>
         <Styled.PresenterViewSectionListWrapper>
@@ -138,16 +205,14 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
             }}
           >
             {
-            (pickedUserWithEntryId) ? 'Pick again' : `Pick ${userRole}`
+            (pickedUserWithEntryId)
+              ? intl.formatMessage(intlMessages.pickAgainButtonLabel)
+              : intl.formatMessage(intlMessages.pickButtonLabel, { 0: userRoleLabel })
             }
           </Styled.PickUserButton>
         ) : (
           <p>
-            No
-            {' '}
-            {userRole}
-            {' '}
-            available to randomly pick from
+            {intl.formatMessage(intlMessages.noUsersWarning, { 0: userRoleLabel })}
           </p>
         )
       }

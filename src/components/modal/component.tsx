@@ -1,10 +1,18 @@
 import { useEffect, useState } from 'react';
 import * as React from 'react';
+import { defineMessages } from 'react-intl';
 import { pluginLogger } from 'bigbluebutton-html-plugin-sdk';
 import * as Styled from './styles';
 import { PickUserModalProps, WindowClientSettings } from './types';
 import { PickedUserViewComponent } from './picked-user-view/component';
 import { PresenterViewComponent } from './presenter-view/component';
+
+const intlMessages = defineMessages({
+  currentUserPicked: {
+    id: 'pickRandomUserPlugin.modal.pickedUserView.title.currentUserPicked',
+    description: 'Title to show that current user has been picked',
+  },
+});
 
 const TIMEOUT_CLOSE_NOTIFICATION = 5000;
 
@@ -27,6 +35,7 @@ export function PickUserModal(props: PickUserModalProps) {
   const {
     pluginSettings,
     isPluginSettingsLoading,
+    intl,
     showModal,
     handleCloseModal,
     users,
@@ -45,16 +54,6 @@ export function PickUserModal(props: PickUserModalProps) {
     dispatcherPickedUser,
   } = props;
 
-  let userRole: string;
-  if (userFilterViewer) {
-    userRole = (users?.length !== 1) ? 'viewers' : 'viewer';
-  } else {
-    userRole = (users?.length !== 1) ? 'users' : 'user';
-  }
-  const title = (pickedUserWithEntryId?.pickedUser?.userId === currentUser?.userId)
-    ? 'You have been randomly picked'
-    : 'Randomly picked user';
-
   const [showPresenterView, setShowPresenterView] = useState<boolean>(
     currentUser?.presenter && !pickedUserWithEntryId,
   );
@@ -71,7 +70,7 @@ export function PickUserModal(props: PickUserModalProps) {
         : `${host}/resources/sounds/doorbell.mp3`;
       const audio = new Audio(pingSoundUrl);
       audio.play();
-      notifyRandomlyPickedUser(title);
+      notifyRandomlyPickedUser(intl.formatMessage(intlMessages.currentUserPicked));
     }
   }, [currentUser, pickedUserWithEntryId]);
   return (
@@ -98,6 +97,7 @@ export function PickUserModal(props: PickUserModalProps) {
           ? (
             <PresenterViewComponent
               {...{
+                intl,
                 filterOutPresenter,
                 setFilterOutPresenter,
                 userFilterViewer,
@@ -109,7 +109,6 @@ export function PickUserModal(props: PickUserModalProps) {
                 dataChannelPickedUsers,
                 pickedUserWithEntryId,
                 users,
-                userRole,
                 dispatcherPickedUser,
               }}
             />
@@ -117,7 +116,7 @@ export function PickUserModal(props: PickUserModalProps) {
             <PickedUserViewComponent
               {...{
                 pickedUserWithEntryId,
-                title,
+                intl,
                 updatePickedRandomUser,
                 currentUser,
                 setShowPresenterView,
