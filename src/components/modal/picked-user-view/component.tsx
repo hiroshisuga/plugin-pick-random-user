@@ -17,6 +17,10 @@ const intlMessages = defineMessages({
     id: 'pickRandomUserPlugin.modal.pickedUserView.backButton.label',
     description: 'Label of back button in picked-user view on the modal',
   },
+  avatarImageAlternativeText: {
+    id: 'pickRandomUserPlugin.modal.pickedUserView.avatarImage.alternativeText',
+    description: 'Alternative text for avatar image',
+  },
 });
 
 export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
@@ -52,21 +56,33 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
       dispatcherPickedUser(null);
     }
   };
+  const avatarUrl = pickedUserWithEntryId.pickedUser.avatar;
 
   const title = (pickedUserWithEntryId?.pickedUser?.userId === currentUser?.userId)
     ? intl.formatMessage(intlMessages.currentUserPicked)
     : intl.formatMessage(intlMessages.randomUserPicked);
+
+  const avatarAltDescriptor = intl.formatMessage(intlMessages.currentUserPicked, {
+    0: pickedUserWithEntryId.pickedUser.name,
+  });
   return (
     <Styled.PickedUserViewWrapper>
       <Styled.PickedUserViewTitle>{title}</Styled.PickedUserViewTitle>
       {
         (pickedUserWithEntryId) ? (
           <>
-            <Styled.PickedUserAvatar
-              background={pickedUserWithEntryId.pickedUser?.color}
-            >
-              {pickedUserWithEntryId.pickedUser?.name.slice(0, 2)}
-            </Styled.PickedUserAvatar>
+            {avatarUrl ? (
+              <Styled.PickedUserAvatarImage
+                alt={avatarAltDescriptor}
+                src={avatarUrl}
+              />
+            ) : (
+              <Styled.PickedUserAvatarInitials
+                background={pickedUserWithEntryId.pickedUser?.color}
+              >
+                {pickedUserWithEntryId.pickedUser?.name.slice(0, 2)}
+              </Styled.PickedUserAvatarInitials>
+            )}
             <Styled.PickedUserName>{pickedUserWithEntryId.pickedUser?.name}</Styled.PickedUserName>
           </>
         ) : null

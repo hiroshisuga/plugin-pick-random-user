@@ -14,7 +14,7 @@ const PickedUserViewTitle = styled.h1`
   font-size: 20px;
 `;
 
-const PickedUserAvatar = styled.div<ModalAvatarProps>`
+const PickedUserAvatarInitials = styled.div<ModalAvatarProps>`
   background-color: ${({ background }) => background};
   height: 6rem;
   width: 6rem;
@@ -29,6 +29,15 @@ const PickedUserAvatar = styled.div<ModalAvatarProps>`
   text-transform: capitalize;
 `;
 
+const PickedUserAvatarImage = styled.img`
+  height: 8rem;
+  width: 8rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const PickedUserName = styled.p`
   font-size: 30px;
   font-weight: 500;
@@ -37,6 +46,7 @@ const PickedUserName = styled.p`
 export {
   PickedUserViewWrapper,
   PickedUserViewTitle,
-  PickedUserAvatar,
+  PickedUserAvatarInitials,
+  PickedUserAvatarImage,
   PickedUserName,
 };
