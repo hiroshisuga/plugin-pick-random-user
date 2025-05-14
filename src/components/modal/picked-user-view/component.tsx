@@ -9,18 +9,22 @@ const intlMessages = defineMessages({
   currentUserPicked: {
     id: 'pickRandomUserPlugin.modal.pickedUserView.title.currentUserPicked',
     description: 'Title to show that current user has been picked',
+    defaultMessage: 'You have been randomly picked',
   },
   randomUserPicked: {
     id: 'pickRandomUserPlugin.modal.pickedUserView.title.randomUserPicked',
     description: 'Title to show that random user has been picked',
+    defaultMessage: 'Randomly picked user',
   },
   backButtonLabel: {
     id: 'pickRandomUserPlugin.modal.pickedUserView.backButton.label',
     description: 'Label of back button in picked-user view on the modal',
+    defaultMessage: 'back',
   },
   avatarImageAlternativeText: {
     id: 'pickRandomUserPlugin.modal.pickedUserView.avatarImage.alternativeText',
     description: 'Alternative text for avatar image',
+    defaultMessage: 'Avatar image of user {0}',
   },
 });
 
