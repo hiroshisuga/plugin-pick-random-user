@@ -11,6 +11,7 @@ const intlMessages = defineMessages({
   currentUserPicked: {
     id: 'pickRandomUserPlugin.modal.pickedUserView.title.currentUserPicked',
     description: 'Title to show that current user has been picked',
+    defaultMessage: 'You have been randomly picked',
   },
 });
 
